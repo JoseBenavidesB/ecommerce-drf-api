@@ -5,7 +5,7 @@ from django.db import models
 class BaseModel(models.Model):
     state           = models.BooleanField('Status', default=True)
     created_date    = models.DateField('Created date', auto_now=True, auto_now_add=False)
-    modified_date   = models.DateField('Modified date', auto_now=True, auto_now_add=True)
+    modified_date   = models.DateField('Modified date', auto_now=False, auto_now_add=True)
     deleted_date    = models.DateField('Deleted date', auto_now=True, auto_now_add=False)
 
 
