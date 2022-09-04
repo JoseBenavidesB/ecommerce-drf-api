@@ -1,15 +1,11 @@
-from distutils.command.upload import upload
-from lib2to3.pytree import Base
-from tabnanny import verbose
-from tokenize import blank_re
 from django.db import models
 from apps.base.models import BaseModel
 from simple_history.models import HistoricalRecords
 
-# Create your models here.
+"""---------- Measure Unit Model ---------------- """
 class MeasureUnit(BaseModel):
     description = models.CharField('Description', max_length=50, blank= False, null= False, unique= True)
-    historical = HistoricalRecords()
+    historical  = HistoricalRecords()
 
     @property
     def _history_user(self):
@@ -26,9 +22,9 @@ class MeasureUnit(BaseModel):
     def __str__(self):
         return self.description
 
+"""---------- Category Produtc  Model ---------------- """
 class CategoryProduct(BaseModel):
     description = models.CharField('Description', max_length=50, unique=True, null=False, blank= False)
-    measure_unit = models.ForeignKey(MeasureUnit, on_delete=models.CASCADE)
     historical = HistoricalRecords()
 
     @property
@@ -46,11 +42,12 @@ class CategoryProduct(BaseModel):
     def __str__(self):
         return self.description
 
+"""---------- Indicator Model ---------------- """
 class Indicator(BaseModel):
 
-    descount_value = models.PositiveSmallIntegerField(default=0)
+    descount_value   = models.PositiveSmallIntegerField(default=0)
     category_product = models.ForeignKey(CategoryProduct, on_delete=models.CASCADE, verbose_name= 'Descount indicator')
-    historical = HistoricalRecords()
+    historical       = HistoricalRecords()
 
     @property
     def _history_user(self):
@@ -67,12 +64,14 @@ class Indicator(BaseModel):
     def __str__(self):
         return f'Category offer: {self.descount_value} %'
 
+"""---------- Product Model ---------------- """
 class Product(BaseModel):
-    name = models.CharField('Product name', max_length= 150, unique= True, blank= False, null= False)
-    description = models.TextField('Product description', blank= True, null= True)
-    image = models.ImageField('Product image', upload_to='products/', blank = True, null = True)
-
-    historical = HistoricalRecords()
+    name             = models.CharField('Product name', max_length= 150, unique= True, blank= False, null= False)
+    description      = models.TextField('Product description', blank= True, null= True)
+    image            = models.ImageField('Product image', upload_to='products/', blank = True, null = True)
+    measure_unit     = models.ForeignKey(MeasureUnit, on_delete=models.CASCADE, verbose_name="Measure unit", null= True)
+    category_product = models.ForeignKey(CategoryProduct, on_delete=models.CASCADE, verbose_name="Category product", null= True)
+    historical       = HistoricalRecords()
 
     @property
     def _history_user(self):
